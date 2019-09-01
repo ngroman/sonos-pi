@@ -17,14 +17,14 @@ class Receiver {
   }
 
   powerOn() {
-    this.irSend('allPowerOn');
+    this.irSend('mainZoneOn');
   }
 
   powerOff() {
     this.irSend('allPowerOff');
   }
 
-  // irsend --count=5 SEND_ONCE denon-ir1 allPowerOn
+  // irsend --count=5 SEND_ONCE denon-ir1 mainZoneOn
   // irsend --count=5 SEND_ONCE denon-ir1 allPowerOff
   irSend(command) {
     if (this.cmdInFlight) {
