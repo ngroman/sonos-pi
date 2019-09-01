@@ -1,0 +1,12 @@
+[Unit]
+Description=Sonos controller service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/sonos-control
+ExecStart=/usr/bin/yarn run start
+Restart=on-failure
+User=sonos
+
+[Install]
+WantedBy=multi-user.target
