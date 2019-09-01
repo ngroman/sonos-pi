@@ -1,4 +1,4 @@
-const {exec, spawn} = require('child_process');
+const {spawn} = require('child_process');
 const SonosSystem = require('sonos-discovery');
 
 const PLAYING = 'PLAYING';
@@ -12,37 +12,37 @@ function log(...args) {
 }
 
 class Receiver {
+  constructor() {
+    this.cmdInFlight = false;
+  }
+
   powerOn() {
-    // log('IR_SEND', 'allPowerOn');
     this.irSend('allPowerOn');
   }
 
   powerOff() {
-    // log('IR_SEND', 'allPowerOff');
     this.irSend('allPowerOff');
   }
 
   // irsend --count=5 SEND_ONCE denon-ir1 allPowerOn
   // irsend --count=5 SEND_ONCE denon-ir1 allPowerOff
   irSend(command) {
-    const fullCmd = `${irCommand} --count=5 SEND_ONCE denon-ir1 "${command}"`;
-    const outBuf = [];
-    const errBuf = [];
-
-    log('ir-send:', fullCmd);
-    const proc = exec(fullCmd, {timeout: 1000, stdio: 'inherit'});
-
-    // // proc.stdout.on('data', data => {
-    // //   outBuf.push(data);
-    // // });
-    // // proc.stderr.on('data', data => {
-    // //   errBuf.push(data);
-    // // });
-    proc.on('exit', code => {
+    if (this.cmdInFlight) {
+      log('IR command already in flight. Skipping.');
+      return;
+    }
+    this.cmdInFlight = true;
+    const args = ['--count=5', 'SEND_ONCE', 'denon-ir1', command];
+    log('ir-send:', irCommand, args.join(' '));
+    const child = spawn(irCommand, args, {stdio: 'inherit'});
+    const killTimeout = setTimeout(() => {
+      child.kill(); // Just in case
+    }, 2000);
+    child.on('exit', code => {
+      this.cmdInFlight = false;
+      clearTimeout(killTimeout);
       if (code !== 0) {
         log(`ERROR: IR send failed code=${code}`);
-        outBuf.length && log(`OUT: ${outBuf.join('')}`);
-        errBuf.length && log(`ERR: ${errBuf.join('')}`);
       }
     });
   }
