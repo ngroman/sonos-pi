@@ -1,0 +1,13 @@
+{
+  "name": "sonos-control",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "IR_COMMAND=echo node index.js"
+  },
+  "dependencies": {
+    "sonos-discovery": "^1.7.3"
+  }
+}
