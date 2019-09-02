@@ -1,4 +1,13 @@
-## Install yarn
+# Sonos -> Raspberry Pi -> Denon Receiver
+
+Trigger a Raspberry Pi based IR-blaster every time when I play music on my Sonos Connect.
+
+For circuit and IR software setup see [rapi-ir/](raspi-ir).
+
+
+# Software install
+
+## Install yarn on raspberry pi
 https://yarnpkg.com/lang/en/docs/install/#debian-stable
 
 ```
@@ -15,6 +24,7 @@ sudo apt-get install yarn
 
 ## Set up systemd service
 https://medium.com/@simon_prickett/writing-a-systemd-service-in-node-js-on-raspberry-pi-be88d9bc2e8d
+
 ```
 sudo cp sonos.service /etc/systemd/system
 sudo systemctl enable sonos.service
