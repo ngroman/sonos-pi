@@ -1,11 +1,15 @@
-const {spawn} = require('child_process');
+const http = require('http');
 const SonosSystem = require('sonos-discovery');
 
 const PLAYING = 'PLAYING';
-const player_uuid = 'RINCON_949F3EB497C801400'; // Dining room
-const SHUTDOWN_TIMEOUT_MS = 10 * 60 * 1000;
+const PLAYER_UUID = process.env.SONOS_UUID || 'RINCON_949F3EB497C801400'; // Dining room
+const SHUTDOWN_TIMEOUT_MS = 5 * 60 * 1000;
 
-const irCommand = process.env.IR_COMMAND || 'irsend';
+const receiverHostname = process.env.RECEIVER_HOSTNAME || 'denon.local.nroman.dev';
+const receiverSetInput = process.env.RECEIVER_INPUT_CMD || 'SIMPLAY'; // Set Input Media Player
+const REC_PATH = '/goform/formiPhoneAppDirect.xml'
+const REC_CMD_ON = 'ZMON'; // Zone main on
+const REC_CMD_OFF = 'PWSTANDBY'
 
 function log(...args) {
   console.log.apply(console, args);
@@ -17,40 +21,34 @@ class Receiver {
   }
 
   powerOn() {
-    this.irSend('mainZoneOn');
+    this.sendHttp(REC_CMD_ON);
+    this.sendHttp(receiverSetInput);
   }
 
   powerOff() {
-    this.irSend('allPowerOff');
+    this.sendHttp(REC_CMD_OFF);
   }
 
-  // irsend --count=5 SEND_ONCE denon-ir1 mainZoneOn
-  // irsend --count=5 SEND_ONCE denon-ir1 allPowerOff
-  irSend(command) {
-    if (this.cmdInFlight) {
-      log('IR command already in flight. Skipping.');
-      return;
-    }
-    this.cmdInFlight = true;
-    const args = ['--count=5', 'SEND_ONCE', 'denon-ir1', command];
-    log('ir-send:', irCommand, args.join(' '));
-    const child = spawn(irCommand, args, {stdio: 'inherit'});
-    const killTimeout = setTimeout(() => {
-      child.kill(); // Just in case
-    }, 2000);
-    child.on('exit', code => {
-      this.cmdInFlight = false;
-      clearTimeout(killTimeout);
-      if (code !== 0) {
-        log(`ERROR: IR send failed code=${code}`);
-      }
+  sendHttp(command) {
+    log(`Sending command: ${command}`);
+    const options = {
+      host: receiverHostname,
+      path: `${REC_PATH}?${command}`,
+    };
+    log(options);
+
+    var req = http.get(options, function(res) {
+      log('Response status', res.statusCode);
+    });
+    req.on('error', function(e) {
+      console.log('ERROR: ' + e.message);
     });
   }
 }
 
 const toState = system => ({
   // PLAYING, PAUSED_PLAYBACK, STOPPED
-  playbackState: system.getPlayerByUUID(player_uuid).state.playbackState,
+  playbackState: system.getPlayerByUUID(PLAYER_UUID).state.playbackState,
 });
 const isPlaying = state => !!(state && state.playbackState === PLAYING);
 
