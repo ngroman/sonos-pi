@@ -2,8 +2,6 @@
 
 Trigger a Raspberry Pi based IR-blaster every time when I play music on my Sonos Connect.
 
-For circuit and IR software setup see [rapi-ir/](raspi-ir).
-
 
 # Software install
 
