@@ -5,7 +5,7 @@ const PLAYING = 'PLAYING';
 const PLAYER_UUID = process.env.SONOS_UUID || 'RINCON_949F3EB497C801400'; // Dining room
 const SHUTDOWN_TIMEOUT_MS = 5 * 60 * 1000;
 
-const receiverHostname = process.env.RECEIVER_HOSTNAME || 'denon.local.nroman.dev';
+const receiverHostname = process.env.RECEIVER_HOSTNAME || '192.168.30.91'; // denon.local.nroman.dev
 const receiverSetInput = process.env.RECEIVER_INPUT_CMD || 'SIMPLAY'; // Set Input Media Player
 const REC_PATH = '/goform/formiPhoneAppDirect.xml'
 const REC_CMD_ON = 'ZMON'; // Zone main on
