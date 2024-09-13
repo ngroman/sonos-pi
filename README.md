@@ -1,42 +1,10 @@
 # Sonos -> Raspberry Pi -> Denon Receiver
 
-Trigger a Raspberry Pi based IR-blaster every time when I play music on my Sonos Connect.
+Start my Denon receiver when I play music on my Sonos Connect.
 
-
-# Software install
-
-## Install yarn on raspberry pi
-https://yarnpkg.com/lang/en/docs/install/#debian-stable
-
-```
-curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-
-sudo apt-get update
-sudo apt-get install yarn
-```
-
-## Create system user
-`sudo useradd -r -s /bin/false sonos`
-
-
-## Set up systemd service
-https://medium.com/@simon_prickett/writing-a-systemd-service-in-node-js-on-raspberry-pi-be88d9bc2e8d
-
-```
-sudo cp sonos.service /etc/systemd/system
-sudo systemctl enable sonos.service
-
-sudo systemctl start sonos.service
-```
-
-Tail logs:
-```
-journalctl -u sonos -f
-```
 
 # Docker install
-Follow https://docs.docker.com/engine/install/debian/
+Follow docker [debian guide](https://docs.docker.com/engine/install/debian/)
 ```
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -66,4 +34,12 @@ sudo docker build . --tag sonos-control
 # Note needs `--network=host` to allow for multicast for Sonos
 sudo docker run --network=host sonos-control
 
-`sudo docker compose up -d`
+Start as daemon (in directory with `docker-componse.yml`)
+```
+sudo docker compose up -d`
+```
+
+Tail logs:
+```
+sudo docker compose logs -t -f
+```
