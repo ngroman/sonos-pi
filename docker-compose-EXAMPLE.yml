@@ -2,7 +2,7 @@ services:
   sonos-control:
     image: sonos-control
     restart: unless-stopped
-    network_mode: host
+    network_mode: host # Needed for Sonos discovery/multicast
     environment:
       SONOS_UUID: "RINCON_949F3EB497C801400" # Dining room
       RECEIVER_HOSTNAME : "denon.local.nroman.dev"
