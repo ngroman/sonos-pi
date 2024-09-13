@@ -7,8 +7,7 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "IR_COMMAND=echo node index.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "sonos-discovery": "^1.7.3"

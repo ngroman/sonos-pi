@@ -1,0 +1,9 @@
+services:
+  sonos-control:
+    image: sonos-control
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      SONOS_UUID: "RINCON_949F3EB497C801400" # Dining room
+      RECEIVER_HOSTNAME : "denon.local.nroman.dev"
+      RECEIVER_INPUT_CMD: "SIMPLAY" # Set Input Media Player

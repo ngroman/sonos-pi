@@ -1,0 +1,43 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      sonos-discovery:
+        specifier: ^1.7.3
+        version: 1.7.3
+
+packages:
+
+  html-entities@1.0.10:
+    resolution: {integrity: sha512-m8IoGR6C9czZTkdI8J3yPC/dNF0qRg1Ipov7pte4MaZdA4F+GfNqtgwI3TPFMxrMRHnpcWFsdHuwvv23TyfOcw==}
+    engines: {'0': node >= 0.4.0}
+
+  sax@1.4.1:
+    resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
+
+  sonos-discovery@1.7.3:
+    resolution: {integrity: sha512-G97Q2eoj/GGjl1LQvtRdzjG5esC1idAW7zJqn3MYthB/IuVpP/2h19OrAbZ8dHyo0N9/T+k2T2VKRbfXK1VX1A==}
+
+  xml-flow@1.0.2:
+    resolution: {integrity: sha512-TfV52Su2083n8w61l1hGI5K3ZAkn4hmaon3oJHc+TRQo0QkKLMPAPdMpGMJd+5Aik6ZUicPDjBINO8QxLkZGgg==}
+
+snapshots:
+
+  html-entities@1.0.10: {}
+
+  sax@1.4.1: {}
+
+  sonos-discovery@1.7.3:
+    dependencies:
+      html-entities: 1.0.10
+      xml-flow: 1.0.2
+
+  xml-flow@1.0.2:
+    dependencies:
+      sax: 1.4.1
