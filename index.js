@@ -17,15 +17,24 @@ function log(...args) {
 
 class Receiver {
   constructor() {
-    this.cmdInFlight = false;
+    this.powerOnDebounceTimeout = null;
   }
 
   powerOn() {
+    if (this.powerOnDebounceTimeout) {
+      log('Skipping powerOn (debounce)');
+      return;
+    }
+    this.powerOnDebounceTimeout = setTimeout(() => {
+      this.powerOnDebounceTimeout = null;
+    }, 2000)
     this.sendHttp(REC_CMD_ON);
     this.sendHttp(receiverSetInput);
   }
 
   powerOff() {
+    clearTimeout(this.powerOnDebounceTimeout);
+    this.powerOnDebounceTimeout = null;
     this.sendHttp(REC_CMD_OFF);
   }
 
@@ -57,10 +66,10 @@ const rec = new Receiver();
 let prevState = null;
 let timeout = null;
 
-sonos.on('transport-state', transportState => {
-  const newState = toState(sonos);
-  log('transport-state', newState);
-  if (isPlaying(newState)) {
+function onStateUpdate() {
+  const onStateUpdate = toState(sonos);
+  log(`state: ${onStateUpdate.playbackState}`);
+  if (isPlaying(onStateUpdate)) {
     clearTimeout(timeout);
     timeout = null;
 
@@ -72,5 +81,15 @@ sonos.on('transport-state', transportState => {
       rec.powerOff();
     }, SHUTDOWN_TIMEOUT_MS);
   }
-  prevState = newState;
+  prevState = onStateUpdate;
+}
+
+sonos.on('transport-state', transportState => {
+  log('EVENT: transport-state');
+  onStateUpdate();
+});
+
+sonos.on('topology-change', _state => {
+  log('EVENT: topology-change');
+  onStateUpdate();
 });
